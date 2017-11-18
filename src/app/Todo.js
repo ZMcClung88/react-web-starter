@@ -17,19 +17,29 @@ export class Todo extends Component {
 
   handleClick(e) {
     e.preventDefault(); // not sure why this is neeeded?
-    const todos = [...this.state.todos, this.state.newTodo];
-    this.setState({todos, newTodo: ''}); //{todos} equivelant of todos: todos. deconstruct.
+    const todos = [...this.state.todos, this.input.value];
+    this.input.value = '';
+    this.setState({todos}); //{todos} equivelant of todos: todos. deconstruct.
+  }
+
+  removeTodo(i) {
+    const todos = [...this.state.todos.slice(0, i), this.state.todos.slice(i + 1)];
+    this.setState({todos})
   }
 
   render() {
     return (
       <div>
         <form>
-          <input onChange={this.handleChange.bind(this)} value={this.state.newTodo} type="text" placeholder="new todo" />
+          <input
+            ref={node => this.input = node}
+            type="text" placeholder="new todo" />
           <button onClick={this.handleClick.bind(this)}>create</button>
         </form>
         <ul>
-          {this.state.todos.map(todo => <li>{todo}</li>)}
+          {this.state.todos.map((todo,i) => (
+            <li onClick={() => this.removeTodo.call(this, i)}>{todo}</li>
+          ))}
         </ul>
       </div>
     );
